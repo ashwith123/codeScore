@@ -5,6 +5,7 @@ import axios from "axios";
 function Signup() {
   const Navigate = useNavigate();
   let [email, setemail] = useState("");
+  let [username, setusername] = useState("");
   let [password, setpassword] = useState("");
   let [userExist, setuserExist] = useState("");
 
@@ -19,13 +20,16 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/signup", {
-        email,
-        password,
-      });
-
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/signup",
+        {
+          email,
+          password,
+          username,
+        }
+      );
+      Navigate("/login");
       console.log("Signup success:", response.data);
-      Navigate("/profile");
     } catch (error) {
       if (error.response) {
         setuserExist("user Already exists");
@@ -36,6 +40,10 @@ function Signup() {
         console.error("Error:", error.message);
       }
     }
+  };
+
+  let handleusernameChange = (e) => {
+    setusername(e.target.value);
   };
 
   return (
@@ -49,6 +57,14 @@ function Signup() {
           id="email"
           value={email}
           onChange={handleEmailChange}
+        />
+        <br />
+        <label htmlFor="username">Enter username</label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={handleusernameChange}
         />
         <br />
         <label htmlFor="password">Enter passwrod</label>

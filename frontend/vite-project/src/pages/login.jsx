@@ -19,25 +19,28 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      if (response.data.message === "password is correct") {
-        console.log("Login success:", response.data);
-        Navigate("/profile");
-      } else {
-        console.error("Login failed:", response.data.message);
+      const { token } = response.data;
+      if (!token) {
+        console.log(response.data.message);
+        return;
       }
+      localStorage.setItem("token", token);
+      Navigate("/profile");
     } catch (error) {
-      if (error.response) {
-        console.error("login failed:", error.response.data.message);
-      } else if (error.request) {
-        console.error("No response from server.");
-      } else {
-        console.error("Error:", error.message);
-      }
+      console.log(error);
+
+      console.error(
+        "Login failed:",
+        error.response?.data?.message || "Unknown error"
+      );
     }
   };
 
