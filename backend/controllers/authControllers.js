@@ -22,10 +22,23 @@ const login = async (req, res) => {
         };
 
         let token = jwt.sign(payload, secret, { expiresIn: "1h" });
-        res.send({ token });
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "Strict",
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        res.status(201).json({
+          _id: currUser._id,
+          username: currUser.username,
+          email: currUser.email,
+          profilePic: currUser.profilePic,
+          createdAt: currUser.createdAt,
+        });
       } else {
         res.send({ message: "password is incorrect" });
       }
+      res.status(200).send({ message: "Login successful" });
     }
   } catch (e) {
     console.log(e);
@@ -62,9 +75,28 @@ const signin = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).send({ message: "User created successfully" });
+    let payload = {
+      username: newUser.username,
+      email: newUser.email,
+    };
+
+    let token = jwt.sign(payload, secret, { expiresIn: "1h" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      profilePic: newUser.profilePic,
+      createdAt: newUser.createdAt,
+    });
   } catch (e) {
-    console.error(e);
+    console.error("Error in login controller:", e);
     res.status(500).send({ message: "Server error" });
   }
 };
@@ -114,10 +146,24 @@ const checkAuth = (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: "Strict",
+    });
+    res.status(200).send({ message: "Logout successful" });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   login,
   signin,
   profile,
   profileUpdate,
   checkAuth,
+  logout,
 };

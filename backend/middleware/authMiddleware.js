@@ -7,7 +7,7 @@ if (!secret) {
 
 const authenticateToken = (req, res, next) => {
   try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
+    const token = req.cookies.token;
 
     if (!token) {
       return res
@@ -23,6 +23,7 @@ const authenticateToken = (req, res, next) => {
       next();
     });
   } catch (e) {
+    console.log(e);
     console.log("error occured during authenitcation");
   }
 };

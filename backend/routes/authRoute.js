@@ -6,6 +6,7 @@ let {
   profile,
   signin,
   checkAuth,
+  logout,
 } = require("../controllers/authControllers.js");
 let authenticateToken = require("../middleware/authMiddleware.js");
 
@@ -14,8 +15,10 @@ router.post("/login", login);
 
 router.get("/profile", authenticateToken, profile);
 
-router.put("/profile-update", authenticateToken, profileUpdate);
+router.put("/update-profile", authenticateToken, profileUpdate);
 
 router.get("/check", authenticateToken, checkAuth);
+
+router.post("/logout", logout);
 
 module.exports = router;

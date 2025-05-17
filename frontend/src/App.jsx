@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./output.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { useAuthStore } from "./store/useAuthStore";
@@ -19,8 +18,6 @@ function App() {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-
-  console.log(authUser);
 
   if (!authUser && isCheckingAuth) {
     return (
