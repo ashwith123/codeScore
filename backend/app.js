@@ -4,11 +4,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const authRoute = require("../backend/routes/authRoute");
+const authMessage = require("../backend/routes/authMessage");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 app.use(cors());
 app.use(express.json());
-
-app.use("/api/auth", authRoute);
+app.use("/api", authRoute);
+app.use("/api/msg", authMessage);
 
 mongoose
   .connect("mongodb://localhost:27017/vchat", {

@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
-const secret = "mysecret";
+const secret = "process.env.SECRET";
+
+if (!secret) {
+  throw new Error("JWT Secret not set in environment variables");
+}
 
 const authenticateToken = (req, res, next) => {
   try {
